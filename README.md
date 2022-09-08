@@ -1,5 +1,5 @@
-# Multithreading and Concurrency Practise
+# JUnit5 and Mockito
 
-Original author of this code is Michael Pogrebinsky. 
+Original author of this code is Adrian. 
 
-Course Link: https://www.udemy.com/course/java-multithreading-concurrency-performance-optimization/
+Course Link: https://www.udemy.com/course/mockito3/
