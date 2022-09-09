@@ -1,9 +1,10 @@
 package com.mockitotutorial.happyhotel.booking;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.mockito.ArgumentCaptor;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -15,24 +16,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class BookingServiceTest {
+    @InjectMocks
     private BookingService bookingService;
+    @Mock
     private PaymentService paymentServiceMock;
+    @Mock
     private RoomService roomServiceMock;
+    @Spy
     private BookingDAO bookingDAOSpy;
+    @Mock
     private MailSender mailSenderMock;
+    @Captor
     private ArgumentCaptor<Double> doubleCaptor;
-
-    @BeforeEach
-    void setup() {
-        paymentServiceMock = mock(PaymentService.class);
-        roomServiceMock = mock(RoomService.class);
-        bookingDAOSpy = spy(BookingDAO.class);
-        mailSenderMock = mock(MailSender.class);
-        bookingService = new BookingService(paymentServiceMock, roomServiceMock,
-                bookingDAOSpy, mailSenderMock);
-        doubleCaptor = ArgumentCaptor.forClass(Double.class);
-    }
 
     @Test
     void shouldCount_AvailablePlaces_When_NoRoomsAvailable() {
