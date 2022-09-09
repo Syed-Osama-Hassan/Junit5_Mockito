@@ -240,4 +240,36 @@ class BookingServiceTest {
         assertEquals(expectedValues, capturedArg);
     }
 
+    @Test
+    void shouldCalculate_CorrectPrice() {
+        try(MockedStatic<CurrencyConverter> converter =
+                    mockStatic(CurrencyConverter.class)) {
+            BookingRequest bookingRequest = new BookingRequest("1", LocalDate.of(2022, 1, 1),
+                    LocalDate.of(2022, 1, 10), 10, true);
+            double expected = 400.0;
+            converter.when(() -> CurrencyConverter.toEuro(anyDouble()))
+                    .thenReturn(expected);
+
+            double actual = bookingService.calculatePriceEuro(bookingRequest);
+
+            assertEquals(expected, actual);
+        }
+    }
+
+    @Test
+    void shouldCalculate_CorrectPrice_BasedOnInput() {
+        try(MockedStatic<CurrencyConverter> converter =
+                    mockStatic(CurrencyConverter.class)) {
+            BookingRequest bookingRequest = new BookingRequest("1", LocalDate.of(2022, 1, 1),
+                    LocalDate.of(2022, 1, 10), 10, true);
+            double expected = 4500.0 * 0.8;
+            converter.when(() -> CurrencyConverter.toEuro(anyDouble()))
+                    .thenAnswer(inv -> (double) inv.getArgument(0) * 0.8);
+
+            double actual = bookingService.calculatePriceEuro(bookingRequest);
+
+            assertEquals(expected, actual);
+        }
+    }
+
 }
