@@ -14,6 +14,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -109,7 +111,7 @@ class BookingServiceTest {
         // Given
         BookingRequest bookingRequest = new BookingRequest("1", LocalDate.of(2022, 1, 1),
                 LocalDate.of(2022, 1, 10), 10, true);
-        when(paymentServiceMock.pay(any(), anyDouble())).thenThrow(BusinessException.class);
+        given(paymentServiceMock.pay(any(), anyDouble())).willThrow(BusinessException.class);
 
         // When
         Executable executable = () -> bookingService.makeBooking(bookingRequest);
@@ -213,7 +215,8 @@ class BookingServiceTest {
         bookingService.makeBooking(bookingRequest);
 
         // Then
-        verify(paymentServiceMock, times(1)).pay(eq(bookingRequest), doubleCaptor.capture());
+        then(paymentServiceMock).should(times(1))
+                .pay(eq(bookingRequest), doubleCaptor.capture());
         double capturedArg = doubleCaptor.getValue();
         assertEquals(capturedArg, 4500.0);
     }
